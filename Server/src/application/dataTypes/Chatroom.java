@@ -16,6 +16,7 @@ public class Chatroom implements Serializable {
 	// The id for the chatroom 
 	private String chatId;
 	
+	
 	// An ArrayList that stores all of the users in the chatroom
 	private ArrayList<String> users = new ArrayList<>();
 	
