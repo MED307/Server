@@ -1,7 +1,5 @@
-import java.io.BufferedReader;
+
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -9,7 +7,7 @@ import java.util.ArrayList;
 public class Server {
 	
 	public static ArrayList<ClientHandler> clients = new ArrayList<>();
-	private static final int PORT = 8000;		//sets the location for the port
+	private static final int PORT = 55555;		//sets the location for the port
 	
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
@@ -22,7 +20,9 @@ public class Server {
 			Socket client = serverSocket.accept(); //listener thread
 			System.out.println("Client connected");
 			ClientHandler clientThread = new ClientHandler(client); 
+			clientThread.run();
 			clients.add(clientThread);
+
 			System.out.println(clients.size());
 		}
 	}
