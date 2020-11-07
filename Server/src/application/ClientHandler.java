@@ -36,9 +36,11 @@ public class ClientHandler extends Thread {
 		try {
 			while(connected) {
 				//The following segment is meant for user creation and login
+				this.oosout.reset();
 				Object something = this.oisin.readObject(); //creates an object that can read the input from the client
 				//check user login
 				if(something instanceof ArrayList<?>) {  //if the received object is an ArryList do the following 
+					System.out.println("received ArrayList");
 					String username = (String) ((ArrayList<?>)something).get(0); 
 					String password = (String) ((ArrayList<?>)something).get(1);
 					int userIndex = 0;
@@ -50,12 +52,8 @@ public class ClientHandler extends Thread {
 						if(udb.getUsers().get(userIndex).getPassword().compareTo(password) == 0 ) {	//checks the passwords connected to the username
 							oosout.writeObject(udb.getUsers().get(userIndex));
 							setClientUser(udb.getUsers().get(userIndex));
-							
-							System.out.println(clientUser);
-							System.out.println("SendClient");
+							System.out.println("Returned User");
 							break;
-						} else {
-							System.out.println("wrong username/password");
 						}
 					}
 				}//login done
@@ -64,9 +62,11 @@ public class ClientHandler extends Thread {
 				if(something instanceof String) {		//if received object is a string do the following 
 					System.out.println("received String");
 					String chatID = ((String)something); //the received String is put into the variable 
-					for(Chatroom i: crm.getChatrooms()) { //goes through every line till it reaches the last line
-						if(i.getChatId().compareTo(chatID) == 0) {  //checks if the username is already in use
-							oosout.writeObject(i);
+					for(Chatroom i: crm.getChatrooms()) { //goes through every chatroom till it reaches the last chatroom
+						if(i.getChatId().compareTo(chatID) == 0) {  //checks if the chatroom matches the requested one
+							oosout.writeObject(i);					// Sends it to the client
+							System.out.println("returned Chatroom");
+							System.out.println(i.getMessages());
 							break;
 						}
 					}
@@ -86,7 +86,9 @@ public class ClientHandler extends Thread {
 					try {
 						for(Chatroom i: crm.getChatrooms()) { //going through the chatroom IDs
 							if(i.getChatId().compareTo(message.getRoomID()) == 0) {// if the messages ID matches the Room ID
-								i.addMessage(message);  //Adds a message to the chatroom						
+								i.addMessage(message);  //Adds a message to the chatroom
+								System.out.println("added Message to Chatroom");
+								System.out.println(i.getMessages());
 							}
 						}
 					}
@@ -96,8 +98,10 @@ public class ClientHandler extends Thread {
 						for(ClientHandler i: clients) 
 						{
 							i.oosout.writeObject(message);
+							System.out.println("sendMessage");
 						}
 						oosout.writeObject(message);
+						System.out.println("returned Message");
 					}
 
 					//Sends the message out to all active clients in the chatroom
@@ -112,6 +116,7 @@ public class ClientHandler extends Thread {
 							if(i.getUsername().compareTo(j) == 0)
 							{
 								i.addChatRoom(((Chatroom)something).getChatId());
+								System.out.println("added Chatroom");
 								break;
 							}
 						}
