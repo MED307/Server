@@ -116,6 +116,13 @@ public class ClientHandler extends Thread {
 							if(i.getUsername().compareTo(j) == 0)
 							{
 								i.addChatRoom(((Chatroom)something).getChatId());
+								for (User u: udb.getUsers())
+								{
+									if (u.getId().compareTo(getClientUser().getId()) == 0) 
+									{
+										u.addChatRoom(((Chatroom)something).getChatId());
+									}
+								}
 								System.out.println("added Chatroom");
 								break;
 							}
