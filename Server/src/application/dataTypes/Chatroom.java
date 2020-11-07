@@ -34,8 +34,8 @@ public class Chatroom implements Serializable {
 		this.name = name;
 		
 		// A random integer is assigned as the id for the chatroom
-		Random rd = new Random();
-        this.chatId = Integer.toString(rd.nextInt());
+		Random rd = new Random(1000000);
+        this.chatId = this.name + Integer.toString(rd.nextInt());
 	}
 	
 	// Method that returns the name of the chatroom
