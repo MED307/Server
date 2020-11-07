@@ -19,7 +19,7 @@ public class Server {
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 		
-		ServerSocket serverSocket = new ServerSocket(PORT); //Opens a server socket on the port(8000)
+		ServerSocket serverSocket = new ServerSocket(PORT); //Opens a server socket on the port(55555)
 		ClientHandler.udb.addUser(new User("Admin","Admin"));
 		
 		// in this while loop a new client socket is created for every new client connecting

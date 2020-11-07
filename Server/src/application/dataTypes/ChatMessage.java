@@ -14,14 +14,15 @@ public class ChatMessage implements Serializable{ //Serializable allows conversi
 
     private String roomID;
 
-
+    //Each chatmessage gets an userID and a roomID
     public ChatMessage(String msg, String userID, String roomID)
     {
         this.message = msg;			
         this.userID = userID;		
         this.setRoomID(roomID);
     }
-
+    
+    //Getters and setters
     public String getMessage() {
         return message;
     }

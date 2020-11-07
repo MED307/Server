@@ -31,6 +31,7 @@ public class UserDataBase {
 		}
 	}
 	
+	//Getters and setters
 	public ArrayList<User> getUsers(){
 		return users;
 	}

@@ -21,7 +21,7 @@ public class ClientHandler extends Thread {
 	private ObjectInputStream oisin = null;
 	private ObjectOutputStream oosout = null;
 	private boolean connected = true;
-	private ReentrantLock lock = new ReentrantLock();
+	private ReentrantLock lock = new ReentrantLock();		//locks the next try function, preventing multiple threads from accessing the same variables
 	
 	//the constructor
 	public ClientHandler(Socket clientSocket, ArrayList<ClientHandler> _clients) throws IOException { 
@@ -58,7 +58,7 @@ public class ClientHandler extends Thread {
 					}
 				}//login done
 				
-				//creates a new user
+				//creates a new chatroom
 				if(something instanceof String) {		//if received object is a string do the following 
 					System.out.println("received String");
 					String chatID = ((String)something); //the received String is put into the variable 
@@ -72,17 +72,16 @@ public class ClientHandler extends Thread {
 					}
 
 				}
-				//adds the new user to the list
+				//adds the new user to the list of users in the UserDataBase
 				if(something instanceof User) {		
 					udb.addUser((User)something);
 					System.out.println("user added");
 				} 
 				//chatrooms
-				//Object chat = oisin.readObject();	//creates an object that can read the input from the client
 				if(something instanceof ChatMessage){
 					System.out.println("received Message");
 					ChatMessage message = (ChatMessage)something;
-					lock.lock();
+					lock.lock(); 		//reentrantlock locks
 					try {
 						for(Chatroom i: crm.getChatrooms()) { //going through the chatroom IDs
 							if(i.getChatId().compareTo(message.getRoomID()) == 0) {// if the messages ID matches the Room ID
@@ -92,9 +91,9 @@ public class ClientHandler extends Thread {
 							}
 						}
 					}
-					finally
+					finally				
 					{
-						lock.unlock();
+						lock.unlock();			//reentrantlock unlocks again
 						for(ClientHandler i: clients) 
 						{
 							i.oosout.writeObject(message);
@@ -109,20 +108,13 @@ public class ClientHandler extends Thread {
 				if(something instanceof Chatroom){
 					System.out.println("received Chatroom");
 					crm.addChatroom((Chatroom)something);
-					for	(String j:((Chatroom)something).getUsers())
+					for	(String j:((Chatroom)something).getUsers()) 		//goes through the users in the chatroom
 					{
-						for (User i: udb.getUsers())
+						for (User i: udb.getUsers())						//goes through the users in the UserDatabase
 						{
-							if(i.getUsername().compareTo(j) == 0)
+							if(i.getUsername().compareTo(j) == 0)			//sees if the usernames in the UserDataBase matches the ones from the Chatroom
 							{
-								i.addChatRoom(((Chatroom)something).getChatId());
-								for (User u: udb.getUsers())
-								{
-									if (u.getId().compareTo(getClientUser().getId()) == 0) 
-									{
-										u.addChatRoom(((Chatroom)something).getChatId());
-									}
-								}
+								i.addChatRoom(((Chatroom)something).getChatId()); //adds the user to the chatroom	
 								System.out.println("added Chatroom");
 								break;
 							}
@@ -130,18 +122,20 @@ public class ClientHandler extends Thread {
 					}
 				}
 			}
-		} catch (ClassNotFoundException | IOException  e) { //the OIS and OOS can throw InputOutputExceptions
+			//the OIS and OOS can throw InputOutputExceptions
+		} catch (ClassNotFoundException | IOException  e) { 
 			e.printStackTrace();
 			connected = false;
 		}
-		try {
+		//the threads, input and output streams are closed
+		try {  				
 			oosout.close();
 			oisin.close();
 			client.close();
 			Server.clients.remove(this);
 			System.out.print(Server.clients.size());
-				
-		} catch (IOException e) {	//the OIS and OOS can throw InputOutputExceptions
+			//the OIS and OOS can throw InputOutputExceptions		
+		} catch (IOException e) {	
 			e.printStackTrace();
 		}	
 	}

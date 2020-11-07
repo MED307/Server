@@ -17,7 +17,8 @@ public class User implements Serializable {//Serializable allows conversion data
     private String id;
 
     private ArrayList<String> chatRooms = new ArrayList<>();
-
+    
+    //Each user gets their own username and password, and assigns them a random ID from 0 to 1000000
     public User(String username, String password){
         this.username = username;
         this.password = password;
@@ -25,7 +26,12 @@ public class User implements Serializable {//Serializable allows conversion data
         Random cd = new Random(1000000);
         id = username + cd.nextInt();
     }
-
+    //Adds chatroom ID to list of chatrooms
+    public void addChatRoom(String chatRoom) {
+        this.chatRooms.add(chatRoom);
+    }
+    
+    //Getters and setters
     public String getUsername() {
         return username;
     }
@@ -52,10 +58,6 @@ public class User implements Serializable {//Serializable allows conversion data
 
     public void setChatRooms(ArrayList<String> chatRooms) {
         this.chatRooms = chatRooms;
-    }
-
-    public void addChatRoom(String chatRoom) {
-        this.chatRooms.add(chatRoom);
     }
 
     public Chatroom getCurrentChatRoom() {
