@@ -57,20 +57,7 @@ public class Chatroom implements Serializable {
 		return this.creator.getUsername();
 		
 	}
-    
-    // Method that is used to display a message
-	public String displayMessage(User user, String message) {
-		
-		return user.getUsername() + ": " + message;
-		
-	}
-	
-	// Method that is used to send a message
-	public void sendMessage(String message) {
-		
-		//chatHistory.add(displayMessage());
-		
-	}
+
 	public ArrayList<ChatMessage> getMessages() {
         return messages;
     }
