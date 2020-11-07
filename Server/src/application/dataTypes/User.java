@@ -22,7 +22,7 @@ public class User implements Serializable {//Serializable allows conversion data
         this.username = username;
         this.password = password;
 
-        Random cd = new Random();
+        Random cd = new Random(1000000);
         id = username + cd.nextInt();
     }
 
